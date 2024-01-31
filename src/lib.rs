@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 // Written in 2023 by
-//     Dr Maxim Orlovsky <orlovsky@org.domaine>
+//     Dr Maxim Orlovsky <orlovsky@ubideco.orge>
 //
-// Copyright (C) 2022-2023 OrgName, Switzerland
+// Copyright (C) 2022-2023 UBIDECO Institute, Switzerland
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
