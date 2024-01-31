@@ -1,0 +1,38 @@
+[env]
+CRATE_TOOLCHAIN_ = { source = "${CRATE_TOOLCHAIN}", default_value = "stable" }
+CRATE_FEATURES_ = { source = "${CRATE_FEATURES}", default_value = "all" }
+
+[tasks.fmt]
+command = "cargo"
+toolchain = "nightly"
+args = ["fmt", "--all"]
+
+[tasks.fmt-check]
+command = "cargo"
+toolchain = "nightly"
+args = ["fmt", "--all", "--", "--check"]
+
+[tasks.clippy]
+command = "cargo"
+toolchain = "stable"
+args = ["clippy", "--workspace", "--all-features"]
+
+[tasks.doc]
+command = "cargo"
+toolchain = "nightly"
+args = ["doc", "--workspace", "--all-features"]
+
+[tasks.test]
+command = "rustup"
+args = ["run", "${CRATE_TOOLCHAIN_}", "cargo", "test", "--workspace", "--features", "${CRATE_FEATURES_}", "--no-fail-fast"]
+
+[tasks.test-all]
+run_task = { name = ["fmt", "clippy", "test" ] }
+
+[tasks.check]
+command = "rustup"
+args = ["run", "${CRATE_TOOLCHAIN_}", "cargo", "check", "--features", "${CRATE_FEATURES_}"]
+
+[tasks.check-all]
+command = "rustup"
+args = ["run", "${CRATE_TOOLCHAIN_}", "cargo", "check", "--workspace", "--all-features"]

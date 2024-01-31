@@ -1,0 +1,36 @@
+[workspace]
+members = ["."]
+default-members = ["."]
+
+[workspace.package]
+authors = ["Dr Maxim Orlovsky <orlovsky@org.domain>"]
+homepage = "https://org.domain"
+repository = "https://github.com/GitOrg/GitRepo"
+rust-version = "1.66"
+edition = "2021"
+license = "Apache-2.0"
+
+[package]
+name = "strict_encoding"
+version = "0.1.0"
+description = "DESCRIPTION"
+keywords = ["KEYWORDS"]
+categories = ["CATEGORIES"]
+authors = { workspace = true }
+repository = { workspace = true }
+homepage = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+rust-version = { workspace = true }
+readme = "README.md"
+exclude = [".github"]
+
+[dependencies]
+
+[features]
+default = []
+all = []
+
+[package.metadata.docs.rs]
+all-features = true
+rustc-args = ["--cfg", "docsrs"]
