@@ -1,11 +1,11 @@
-// DESCRIPTION
+// Vesper: declarative human-readable structural language
 //
 // SPDX-License-Identifier: Apache-2.0
 //
-// Written in 2023 by
-//     Dr Maxim Orlovsky <orlovsky@ubideco.orge>
+// Written in 2024 by
+//     Dr Maxim Orlovsky <orlovsky@ubideco.org>
 //
-// Copyright (C) 2022-2023 UBIDECO Institute, Switzerland
+// Copyright (C) 2024 UBIDECO Institute, Switzerland
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,15 +19,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//! DESCRIPTION
+//! Vesper: declarative human-readable structural language
 
-#![deny(
-    non_upper_case_globals,
-    non_camel_case_types,
-    non_snake_case,
-    unused_mut,
-    unused_imports,
-    dead_code,
-    missing_docs
-)]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
+
+#[macro_use]
+extern crate amplify;
+
+mod t_expr;
+
+pub use t_expr::*;

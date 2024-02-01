@@ -72,7 +72,7 @@ verbose and less readable:
         <bytes name="ScriptPubkey" min-len="0" max-len="MAX64"/>
     </list>
     <field name="LockTime" type="U32"/>
-</rec> 
+</rec>
 ```
 
 Vesper uses new clause notation, called *T-expressions*. You may be aware

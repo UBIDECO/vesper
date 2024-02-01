@@ -13,7 +13,7 @@ license = "Apache-2.0"
 [package]
 name = "vesper"
 version = "0.1.0"
-description = "DESCRIPTION"
+description = "Vesper: declarative human-readable structural language"
 keywords = ["KEYWORDS"]
 categories = ["CATEGORIES"]
 authors = { workspace = true }
@@ -26,6 +26,7 @@ readme = "README.md"
 exclude = [".github"]
 
 [dependencies]
+amplify = "4.5.0"
 
 [features]
 default = []
