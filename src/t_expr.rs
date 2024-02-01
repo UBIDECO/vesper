@@ -24,14 +24,13 @@ use std::fmt::{Display, Formatter};
 use amplify::confinement::{SmallVec, TinyVec};
 use strict_encoding::Ident;
 
-pub trait Attribute: Clone + Eq {}
-
 pub trait Predicate: Clone + Eq {
-    type Attr: Attribute;
+    type AttrVal: AttributeValue;
 }
+pub trait AttributeValue: Clone + Eq + Display {}
 
 #[derive(Clone, Eq, PartialEq, Hash, Debug, Display)]
-pub enum AttrType<A: Display> {
+pub enum Attr<A: AttributeValue> {
     #[display(inner)]
     Unnamed(A),
 
@@ -43,16 +42,13 @@ pub enum AttrType<A: Display> {
 pub struct TExpr<P: Predicate> {
     pub subject: Ident,
     pub predicate: P,
-    pub attributes: SmallVec<P::Attr>,
+    pub attributes: SmallVec<Attr<P::AttrVal>>,
     pub content: TinyVec<Box<TExpr<P>>>,
 }
 
 impl<P: Predicate> TExpr<P> {
     pub fn display(&self) -> TExprDisplay<P>
-    where
-        P: Display,
-        P::Attr: Display,
-    {
+    where P: Display {
         TExprDisplay {
             expr: self,
             indent: 0,
@@ -62,9 +58,7 @@ impl<P: Predicate> TExpr<P> {
 }
 
 pub struct TExprDisplay<'expr, P: Predicate>
-where
-    P: Display,
-    P::Attr: Display,
+where P: Display
 {
     expr: &'expr TExpr<P>,
     indent: usize,
@@ -72,9 +66,7 @@ where
 }
 
 impl<'expr, P: Predicate> TExprDisplay<'expr, P>
-where
-    P: Display,
-    P::Attr: Display,
+where P: Display
 {
     pub fn indented(parent: &Self, expr: &'expr TExpr<P>) -> TExprDisplay<'expr, P> {
         TExprDisplay {
@@ -86,9 +78,7 @@ where
 }
 
 impl<'expr, P: Predicate> Display for TExprDisplay<'expr, P>
-where
-    P: Display,
-    P::Attr: Display,
+where P: Display
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let expr = self.expr;
