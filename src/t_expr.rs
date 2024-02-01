@@ -24,10 +24,10 @@ use std::fmt::{Display, Formatter};
 use amplify::confinement::{SmallVec, TinyVec};
 use strict_encoding::Ident;
 
-pub trait Vocabulary {
-    type Subj;
-    type Pred;
-    type Attr;
+pub trait Attribute: Clone + Eq {}
+
+pub trait Predicate: Clone + Eq {
+    type Attr: Attribute;
 }
 
 #[derive(Clone, Eq, PartialEq, Hash, Debug, Display)]
@@ -39,20 +39,19 @@ pub enum AttrType<A: Display> {
     Named(Ident, A),
 }
 
-#[derive(Clone, Eq, PartialEq, Hash, Debug)]
-pub struct TExpr<V: Vocabulary> {
-    pub subject: V::Subj,
-    pub predicate: V::Pred,
-    pub attributes: SmallVec<V::Attr>,
-    pub content: TinyVec<Box<TExpr<V>>>,
+#[derive(Clone, Eq, PartialEq)]
+pub struct TExpr<P: Predicate> {
+    pub subject: Ident,
+    pub predicate: P,
+    pub attributes: SmallVec<P::Attr>,
+    pub content: TinyVec<Box<TExpr<P>>>,
 }
 
-impl<V: Vocabulary> TExpr<V> {
-    pub fn display(&self) -> TExprDisplay<V>
+impl<P: Predicate> TExpr<P> {
+    pub fn display(&self) -> TExprDisplay<P>
     where
-        V::Subj: Display,
-        V::Pred: Display,
-        V::Attr: Display,
+        P: Display,
+        P::Attr: Display,
     {
         TExprDisplay {
             expr: self,
@@ -62,24 +61,22 @@ impl<V: Vocabulary> TExpr<V> {
     }
 }
 
-pub struct TExprDisplay<'expr, V: Vocabulary>
+pub struct TExprDisplay<'expr, P: Predicate>
 where
-    V::Subj: Display,
-    V::Pred: Display,
-    V::Attr: Display,
+    P: Display,
+    P::Attr: Display,
 {
-    expr: &'expr TExpr<V>,
+    expr: &'expr TExpr<P>,
     indent: usize,
     tab: String,
 }
 
-impl<'expr, V: Vocabulary> TExprDisplay<'expr, V>
+impl<'expr, P: Predicate> TExprDisplay<'expr, P>
 where
-    V::Subj: Display,
-    V::Pred: Display,
-    V::Attr: Display,
+    P: Display,
+    P::Attr: Display,
 {
-    pub fn indented(parent: &Self, expr: &'expr TExpr<V>) -> TExprDisplay<'expr, V> {
+    pub fn indented(parent: &Self, expr: &'expr TExpr<P>) -> TExprDisplay<'expr, P> {
         TExprDisplay {
             expr,
             indent: parent.indent + 1,
@@ -88,11 +85,10 @@ where
     }
 }
 
-impl<'expr, V: Vocabulary> Display for TExprDisplay<'expr, V>
+impl<'expr, P: Predicate> Display for TExprDisplay<'expr, P>
 where
-    V::Subj: Display,
-    V::Pred: Display,
-    V::Attr: Display,
+    P: Display,
+    P::Attr: Display,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let expr = self.expr;
