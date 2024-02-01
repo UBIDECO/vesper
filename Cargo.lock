@@ -10,6 +10,7 @@ checksum = "8629db306c0bbeb0a402e2918bdcf0026b5ddb24c46460f3bf5410b350d98710"
 dependencies = [
  "amplify_derive",
  "amplify_num",
+ "amplify_syn",
  "ascii",
  "wasm-bindgen",
 ]
@@ -65,6 +66,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
+name = "heck"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "95505c38b4572b2d910cecb0281560f54b440a19336cbbcb27bf6ce6adc6f5a8"
+
+[[package]]
 name = "log"
 version = "0.4.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -92,6 +99,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "291ec9ab5efd934aaf503a6466c5d5251535d108ee747472c3977cc5acc868ef"
 dependencies = [
  "proc-macro2",
+]
+
+[[package]]
+name = "strict_encoding"
+version = "2.6.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fa76decc8ac190a56ba7857c023b69ed52b781ed974c5a181eac62cdbfc99521"
+dependencies = [
+ "amplify",
+ "strict_encoding_derive",
+]
+
+[[package]]
+name = "strict_encoding_derive"
+version = "2.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "37064ec285e2a633465eb525c8698eea51373dee889fe310e0d32df8343e7f4f"
+dependencies = [
+ "amplify_syn",
+ "heck",
+ "proc-macro2",
+ "quote",
+ "syn 1.0.109",
 ]
 
 [[package]]
@@ -127,6 +157,7 @@ name = "vesper"
 version = "0.1.0"
 dependencies = [
  "amplify",
+ "strict_encoding",
 ]
 
 [[package]]

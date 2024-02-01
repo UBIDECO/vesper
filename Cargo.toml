@@ -27,6 +27,7 @@ exclude = [".github"]
 
 [dependencies]
 amplify = "4.5.0"
+strict_encoding = "2.6.2"
 
 [features]
 default = []

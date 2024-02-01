@@ -22,11 +22,21 @@
 use std::fmt::{Display, Formatter};
 
 use amplify::confinement::{SmallVec, TinyVec};
+use strict_encoding::Ident;
 
 pub trait Vocabulary {
     type Subj;
     type Pred;
     type Attr;
+}
+
+#[derive(Clone, Eq, PartialEq, Hash, Debug, Display)]
+pub enum AttrType<A: Display> {
+    #[display(inner)]
+    Unnamed(A),
+
+    #[display("{0}={1}")]
+    Named(Ident, A),
 }
 
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
