@@ -38,14 +38,14 @@ pub trait Attribute: Clone + Eq {
     fn value(&self) -> AttrVal<Self::Expression>;
 }
 
-#[derive(Clone, Eq, PartialEq, Display)]
+#[derive(Clone, Eq, PartialEq, Debug, Display)]
 #[display(inner)]
 pub enum AttrVal<E: Expression> {
     Ident(Ident),
     Expr(E),
 }
 
-#[derive(Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq, Debug)]
 pub struct TExpr<P: Predicate> {
     pub subject: Ident,
     pub predicate: P,
