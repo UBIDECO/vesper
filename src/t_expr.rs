@@ -107,7 +107,7 @@ where P: Display
                 f.write_str(" ")?;
             }
             if let Some(name) = attr.name() {
-                write!(f, "{name}~")?;
+                write!(f, "{name}=")?;
             }
             write!(f, "{}", attr.value())?;
 
