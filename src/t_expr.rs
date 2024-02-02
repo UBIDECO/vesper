@@ -88,19 +88,33 @@ impl<'expr, P: Predicate> Display for TExprDisplay<'expr, P>
 where P: Display
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let expr = self.expr;
+        const MAX_LINE_VARS: usize = 8;
 
-        for _ in 0..self.indent {
-            f.write_str(&self.tab)?;
+        let expr = self.expr;
+        let attrs = &expr.attributes;
+
+        let indent = self.tab.repeat(self.indent);
+        write!(f, "{indent}{} {}", expr.subject, expr.predicate)?;
+
+        if attrs.len() > MAX_LINE_VARS {
+            write!(f, " {{\n{indent}")?;
         }
-        write!(f, "{} {}", expr.subject, expr.predicate)?;
-        for attr in &expr.attributes {
+        for (pos, attr) in expr.attributes.iter().enumerate() {
             if let Some(name) = attr.name() {
                 write!(f, " {name}~")?;
             }
             write!(f, " {}", attr.value())?;
+
+            if pos > 0 && pos % MAX_LINE_VARS == 0 {
+                write!(f, "\n{indent}{}", self.tab)?;
+            }
         }
+        if attrs.len() > MAX_LINE_VARS {
+            write!(f, "\n{indent}}}")?;
+        }
+
         writeln!(f)?;
+
         for expr in &expr.content {
             let display = TExprDisplay::indented(self, expr.as_ref());
             Display::fmt(&display, f)?;
