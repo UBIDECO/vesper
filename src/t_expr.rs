@@ -19,7 +19,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use std::fmt;
 use std::fmt::{Display, Formatter};
 
 use amplify::confinement::{SmallVec, TinyVec};
@@ -27,36 +26,30 @@ use strict_encoding::Ident;
 
 pub trait Predicate: Clone + Eq {
     type Attr: Attribute;
-    type AttrNamed: AttributeNamed;
 }
+
+pub trait Expression: Clone + Eq + Display {}
+
 pub trait Attribute: Clone + Eq {
-    fn value(&self) -> Ident;
+    type Expression: Expression;
+
+    fn is_named(&self) -> bool { self.name().is_some() }
+    fn name(&self) -> Option<Ident>;
+    fn value(&self) -> AttrVal<Self::Expression>;
 }
 
-pub trait AttributeNamed: Attribute {
-    fn name(&self) -> Ident;
-}
-
-#[derive(Clone, Eq, PartialEq, Hash, Debug)]
-pub enum Attr<U: Attribute, N: AttributeNamed> {
-    Unnamed(U),
-    Named(N),
-}
-
-impl<U: Attribute, N: AttributeNamed> Display for Attr<U, N> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        match self {
-            Attr::Unnamed(a) => write!(f, "{}", a.value()),
-            Attr::Named(a) => write!(f, "{}~{}", a.name(), a.value()),
-        }
-    }
+#[derive(Clone, Eq, PartialEq, Display)]
+#[display(inner)]
+pub enum AttrVal<E: Expression> {
+    Ident(Ident),
+    Expr(E),
 }
 
 #[derive(Clone, Eq, PartialEq)]
 pub struct TExpr<P: Predicate> {
     pub subject: Ident,
     pub predicate: P,
-    pub attributes: SmallVec<Attr<P::Attr, P::AttrNamed>>,
+    pub attributes: SmallVec<P::Attr>,
     pub content: TinyVec<Box<TExpr<P>>>,
 }
 
@@ -102,7 +95,10 @@ where P: Display
         }
         write!(f, "{} {}", expr.subject, expr.predicate)?;
         for attr in &expr.attributes {
-            write!(f, " {attr}")?;
+            if let Some(name) = attr.name() {
+                write!(f, " {name}~")?;
+            }
+            write!(f, " {}", attr.value())?;
         }
         writeln!(f)?;
         for expr in &expr.content {
