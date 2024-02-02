@@ -51,6 +51,7 @@ pub struct TExpr<P: Predicate> {
     pub predicate: P,
     pub attributes: SmallVec<P::Attr>,
     pub content: TinyVec<Box<TExpr<P>>>,
+    pub comment: Option<String>,
 }
 
 impl<P: Predicate> TExpr<P> {
@@ -97,13 +98,18 @@ where P: Display
         write!(f, "{indent}{} {}", expr.subject, expr.predicate)?;
 
         if attrs.len() > MAX_LINE_VARS {
-            write!(f, " {{\n{indent}")?;
+            write!(f, " {{\n{indent}{}", self.tab)?;
+        } else if !attrs.is_empty() {
+            f.write_str(" ")?;
         }
         for (pos, attr) in expr.attributes.iter().enumerate() {
-            if let Some(name) = attr.name() {
-                write!(f, " {name}~")?;
+            if pos == 1 || (pos > 0 && pos % MAX_LINE_VARS != 1) {
+                f.write_str(" ")?;
             }
-            write!(f, " {}", attr.value())?;
+            if let Some(name) = attr.name() {
+                write!(f, "{name}~")?;
+            }
+            write!(f, "{}", attr.value())?;
 
             if pos > 0 && pos % MAX_LINE_VARS == 0 {
                 write!(f, "\n{indent}{}", self.tab)?;
@@ -113,6 +119,9 @@ where P: Display
             write!(f, "\n{indent}}}")?;
         }
 
+        if let Some(comment) = &expr.comment {
+            write!(f, " -- {comment}")?;
+        }
         writeln!(f)?;
 
         for expr in &expr.content {
