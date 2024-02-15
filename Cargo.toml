@@ -11,11 +11,11 @@ edition = "2021"
 license = "Apache-2.0"
 
 [package]
-name = "vesper"
+name = "vesper-lang"
 version = "0.1.0"
 description = "Vesper: declarative human-readable structural language"
-keywords = ["KEYWORDS"]
-categories = ["CATEGORIES"]
+keywords = []
+categories = ["compilers", "value-formatting"]
 authors = { workspace = true }
 repository = { workspace = true }
 homepage = { workspace = true }
@@ -25,9 +25,12 @@ rust-version = { workspace = true }
 readme = "README.md"
 exclude = [".github"]
 
+[lib]
+name = "vesper"
+
 [dependencies]
-amplify = "4.5.0"
-strict_encoding = "2.6.2"
+amplify = "4.6.0"
+strict_encoding = "2.7.0-beta.1"
 
 [features]
 default = []
