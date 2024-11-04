@@ -100,14 +100,14 @@ where P: Display
         if attrs.len() > MAX_LINE_VARS {
             write!(f, " {{\n{indent}{}", self.tab)?;
         } else if !attrs.is_empty() {
-            f.write_str(" ")?;
+            f.write_str(", ")?;
         }
         for (pos, attr) in expr.attributes.iter().enumerate() {
             if pos == 1 || (pos > 0 && pos % MAX_LINE_VARS != 1) {
-                f.write_str(" ")?;
+                f.write_str(", ")?;
             }
             if let Some(name) = attr.name() {
-                write!(f, "{name}=")?;
+                write!(f, "{name} ")?;
             }
             write!(f, "{}", attr.value())?;
 
