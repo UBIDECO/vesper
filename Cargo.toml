@@ -29,8 +29,8 @@ exclude = [".github"]
 name = "vesper"
 
 [dependencies]
-amplify = "4.6.0"
-strict_encoding = "2.7.0-beta.1"
+amplify = "4.8.0"
+strict_encoding = "2.8.0"
 
 [features]
 default = []
