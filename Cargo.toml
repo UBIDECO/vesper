@@ -12,7 +12,7 @@ license = "Apache-2.0"
 
 [package]
 name = "vesper-lang"
-version = "0.2.0"
+version = "0.2.1"
 description = "Vesper: declarative human-readable structural language"
 keywords = []
 categories = ["compilers", "value-formatting"]

@@ -95,7 +95,7 @@ where P: Display
         let attrs = &expr.attributes;
 
         let indent = self.tab.repeat(self.indent);
-        write!(f, "{indent}{} {}", expr.subject, expr.predicate)?;
+        write!(f, "{indent}{} {}", expr.predicate, expr.subject)?;
 
         if attrs.len() > MAX_LINE_VARS {
             write!(f, " {{\n{indent}{}", self.tab)?;
