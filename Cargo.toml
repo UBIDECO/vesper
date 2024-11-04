@@ -6,7 +6,7 @@ default-members = ["."]
 authors = ["Dr Maxim Orlovsky <orlovsky@ubideco.org>"]
 homepage = "https://vesper-lang.org"
 repository = "https://github.com/UBIDECO/vesper"
-rust-version = "1.66"
+rust-version = "1.77"
 edition = "2021"
 license = "Apache-2.0"
 
