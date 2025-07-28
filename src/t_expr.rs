@@ -55,7 +55,7 @@ pub struct TExpr<P: Predicate> {
 }
 
 impl<P: Predicate> TExpr<P> {
-    pub fn display(&self) -> TExprDisplay<P>
+    pub fn display(&self) -> TExprDisplay<'_, P>
     where P: Display {
         TExprDisplay {
             expr: self,
@@ -97,26 +97,25 @@ where P: Display
         let indent = self.tab.repeat(self.indent);
         write!(f, "{indent}{} {}", expr.predicate, expr.subject)?;
 
-        if attrs.len() > MAX_LINE_VARS {
-            write!(f, " {{\n{indent}{}", self.tab)?;
-        } else if !attrs.is_empty() {
-            f.write_str(", ")?;
+        if !attrs.is_empty() {
+            f.write_str(": ")?;
         }
-        for (pos, attr) in expr.attributes.iter().enumerate() {
-            if pos == 1 || (pos > 0 && pos % MAX_LINE_VARS != 1) {
-                f.write_str(", ")?;
-            }
+
+        let mut iter = expr.attributes.iter().enumerate().peekable();
+        while let Some((pos, attr)) = iter.next() {
             if let Some(name) = attr.name() {
                 write!(f, "{name} ")?;
             }
             write!(f, "{}", attr.value())?;
 
+            if iter.peek().is_some() {
+                f.write_str(",")?;
+            }
             if pos > 0 && pos % MAX_LINE_VARS == 0 {
                 write!(f, "\n{indent}{}", self.tab)?;
+            } else {
+                f.write_str(" ")?;
             }
-        }
-        if attrs.len() > MAX_LINE_VARS {
-            write!(f, "\n{indent}}}")?;
         }
 
         if let Some(comment) = &expr.comment {

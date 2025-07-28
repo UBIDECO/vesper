@@ -12,7 +12,7 @@ license = "Apache-2.0"
 
 [package]
 name = "vesper-lang"
-version = "0.2.1"
+version = "0.2.2"
 description = "Vesper: declarative human-readable structural language"
 keywords = []
 categories = ["compilers", "value-formatting"]
@@ -30,7 +30,7 @@ name = "vesper"
 
 [dependencies]
 amplify = "4.8.0"
-strict_encoding = "2.8.0"
+strict_encoding = "2.9.1"
 
 [features]
 default = []
