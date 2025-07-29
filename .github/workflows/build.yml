@@ -2,9 +2,15 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+    tags:
+      - 'v[0-9]+.*'
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
+      - develop
+      - 'v[0-9]+.?*'
 
 env:
   CARGO_TERM_COLOR: always
@@ -24,30 +30,29 @@ jobs:
         with:
           command: check
           args: --workspace
-  features:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        feature:
-          - serde
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install rust stable
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-      - name: Feature ${{ matrix.feature }}
-        uses: actions-rs/cargo@v1
-        with:
-          command: check
-          args: --no-default-features --features=${{ matrix.feature }}
-      - name: Defaults + ${{ matrix.feature }}
-        uses: actions-rs/cargo@v1
-        with:
-          command: check
-          args: --features=${{ matrix.feature }}
+#  features:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        feature:
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: Install rust stable
+#        uses: actions-rs/toolchain@v1
+#        with:
+#          toolchain: stable
+#          override: true
+#      - name: Feature ${{ matrix.feature }}
+#        uses: actions-rs/cargo@v1
+#        with:
+#          command: check
+#          args: --no-default-features --features=${{ matrix.feature }}
+#      - name: Defaults + ${{ matrix.feature }}
+#        uses: actions-rs/cargo@v1
+#        with:
+#          command: check
+#          args: --features=${{ matrix.feature }}
   platforms:
     runs-on: ${{ matrix.os }}
     strategy:
