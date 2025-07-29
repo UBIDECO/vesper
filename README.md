@@ -11,44 +11,48 @@
 
 ## Overview
 
-Sometimes we need to represent multidimensional data hierarchies in a very
-laconic style, which will be easily-readable for humans. At the same time,
-we do not want to lose precision, and have this representation formal and
-deterministic.
+Sometimes we need to represent multidimensional data hierarchies in a very laconic style,
+which will be easily-readable for humans.
+At the same time, we do not want to lose precision 
+and have this representation formal and deterministic.
 
-Up to day, the choice had to be made between JSON, YAML and XML. JSON lacks
-multidimensionality and, while being flexible, lacks proper efficient way 
-of defining data formal structure (schema). Yes, JSON schemata exists, but
-are very clunky - like XML. XML has more tools to formalize the data 
-structure, but is quite hard to visually parse. YAML is the most parsable,
-it also supports more structure than JSON - but still less than XML, and
-again, lacks efficient schema languages.
+Up to day, the choice had to be made between JSON, YAML and XML.
+JSON lacks multidimensionality and, while being flexible,
+lacks a proper efficient way to define data formal structure (schema).
+Yes, JSON schemata do exist, but are very clunky — like XML.
+XML has more tools to formalize the data structure, but is quite hard to visually parse.
+YAML is the most parsable, it also supports more structure than JSON —
+but still less than XML, and again, lacks efficient schema languages.
 
-Thus, we created Vesper: formal language which is visually clean, and at 
-the same time has the same power as XML:
+Thus, we created Vesper: a formal language which is visually clean 
+and at the same time has the same power as XML:
 
 ```vesper
-Transaction rec
-    Version enum U8 V1=1 V2=2
-    Inputs list 0..MAX64
-        PrevOut rec
-            Txid bytes 32
-            Vout as U32
-        Sequence as U32
-        ScriptSig bytes 0..MAX64
-        Witness list 0..MAX64
-            ByteStr bytes 0..MAX64
-    Outputs list 0..MAX64
-        Value as U64
-        ScriptPubkey bytes 0..MAX64
-    LockTime as U32
+rec Transaction
+    enum Version: U8 v1 1, v2 2
+    list Inputs: len 0..MAX64
+        rec PrevOut
+            bytes Txid: len 32
+            field Vout: U32
+        field Sequence: U32
+        bytes ScriptSig: len 0..MAX64
+        list Witness: len 0..MAX64
+            bytes ByteStr: len 0..MAX64
+    list Outputs: len 0..MAX64
+        field Value: U64
+        bytes ScriptPubkey: len 0..MAX64
+    field LockTime: U32
 ```
 
-The above is the full representation of both data type hierarchy, semantic
-structure and memory layout for a Bitcoin transaction: this is how clean
-it can be. Written in JSON, it would take at least twice more text, plenty
-of quotation marks, brackets and braces. XML equivalent is also much more
-verbose and less readable:
+The above is the full representation of both data type hierarchy,
+semantic structure and memory layout for a Bitcoin transaction:
+this is how clean it can be.
+Written in JSON, it would take at least twice as much text,
+plenty of quotation marks, brackets and braces —
+and, the most important, it would not be possible to express
+two-dimensional information of type attributes and structure fields.
+
+XML equivalent is also much more verbose and less readable:
 
 ```xml
 <rec name="Transaction">
@@ -75,35 +79,53 @@ verbose and less readable:
 </rec>
 ```
 
-Vesper uses new clause notation, called *T-expressions*. You may be aware
-of [S-expressions] and [M-expressions], and _T-expressions_ are the new
-guest in the town, which follows a specific visually-clean pattern to
-represent semantic constructs: `subject` `predicate` `attributes` \ 
-`content`, where subject-predicate-attributes go in one line, forming a
-kind of sentence, and content is nested below and can span multiple lines.
-Each line of the content is in fact another T-expression, and we end up
-with a tree (here is why the expression is called "T", i.e. 
-"Tree-expression").
+Vesper uses new clause notation, called *T-expressions*.
+You may be aware of [S-expressions] and [M-expressions],
+and *T-expressions* are the new guest in the town,
+which follows a specific visually clean pattern
+to represent semantic constructs:
 
-The full grammar of Vesper is so simple, that its formal definition can 
-fit just nine lines (here we use our custom BNF-styled notation):
 ```
-t-expr => subject predicate `{` ( attr )* `}`
+<predicate> <subject>: <attributes>,*
+    <content>
+```
+
+where predicate-subject-attributes go in one line, forming a kind of sentence,
+and content is nested below and can span multiple lines.
+Or, for a short content, one may use a one-liner:
+
+```
+<predicate> <subject>: <attributes>,* := <content>
+```
+
+Each line of the content is, in fact, another V-expression,
+so we end up with a tree
+(here is why the expression is called "T", i.e. "Tree-expression").
+
+The full grammar of Vesper is so simple,
+that its formal definition can fit just nine lines
+(here we use our custom BNF-styled notation):
+```
+t-expr => t-expr-multiline | t-expr-one-line
+
+t-expr-multiline => predicate subject `:` ( attr ),* 
             ( t-expr )\*
+
+t-expr-one-line => predicate subject `:` ( attr ),* `:=` t-expr
 
 subject => ident
 predicate => ident
 attr => simple | named
 simple => ident | expr
-named => ident `=` ( ident | expr )
+named => ident ( ident | expr )
 
 ident => (\w_)[\w\d_-]*
 expr => [\S]+ -- all ASCII printable symbols except of whitespace
 ```
 
-Vesper comes with its own schema language (named "Vesper schema"), which
-allows creating domain-specific sublanguages, like we did for the data
-type and memory layout above:
+Vesper comes with its own schema language (named "Vesper schema"),
+which allows creating domain-specific sublanguages,
+like we did for the data type and memory layout above:
 
 ```vesper-schema
 rec := - (*)
@@ -117,8 +139,9 @@ char := - (-)
 str := \range (-)
 ```
 
-As you see, it is also ultra-concise: the whole definition for an 
-arbitrary data type hierarchy and memory layout fits in just nine lines!
+As you see, it is also ultra-concise:
+the whole definition for an arbitrary data type hierarchy and memory layout
+fits in just nine lines!
 
 
 ## Contributing
@@ -128,3 +151,7 @@ arbitrary data type hierarchy and memory layout fits in just nine lines!
 ## License
 
 The libraries are distributed on the terms of [Apache 2.0 license](LICENSE).
+
+[S-expressions]: https://en.wikipedia.org/wiki/S-expression
+[M-expressions]: https://en.wikipedia.org/wiki/M-expression
+
