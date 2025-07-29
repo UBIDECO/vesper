@@ -5,9 +5,9 @@
 ![Lints](https://github.com/UBIDECO/vesper/workflows/Lints/badge.svg)
 [![codecov](https://codecov.io/gh/UBIDECO/vesper/branch/master/graph/badge.svg)](https://codecov.io/gh/UBIDECO/vesper)
 
-[![crates.io](https://img.shields.io/crates/v/vesper)](https://crates.io/crates/vesper)
-[![Docs](https://docs.rs/vesper/badge.svg)](https://docs.rs/vesper)
-[![Apache-2 licensed](https://img.shields.io/crates/l/vesper)](./LICENSE)
+[![crates.io](https://img.shields.io/crates/v/vesper-lang)](https://crates.io/crates/vesper-lang)
+[![Docs](https://docs.rs/vesper-lang/badge.svg)](https://docs.rs/vesper-lang)
+[![Apache-2 licensed](https://img.shields.io/crates/l/vesper-lang)](./LICENSE)
 
 ## Overview
 
