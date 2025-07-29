@@ -2,10 +2,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 //
-// Written in 2024 by
+// Designed & Written in 2024-2025 by
 //     Dr Maxim Orlovsky <orlovsky@ubideco.org>
 //
-// Copyright (C) 2024 UBIDECO Institute, Switzerland
+// Copyright (C) 2024-2025 Laboratories for Ubiquitous and Deterministic Computing,
+//     Institute for Distributed and Cognitive Systems, Lugano, Switzerland
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.

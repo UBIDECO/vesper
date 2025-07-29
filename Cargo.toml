@@ -13,7 +13,7 @@ license = "Apache-2.0"
 [package]
 name = "vesper-lang"
 version = "0.2.2"
-description = "Vesper: declarative human-readable structural language"
+description = "Vesper: flexible and simple data interchange and serialization format"
 keywords = []
 categories = ["compilers", "value-formatting"]
 authors = { workspace = true }
