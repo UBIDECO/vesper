@@ -131,3 +131,49 @@ where P: Display
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::str::FromStr;
+    use super::*;
+
+    #[derive(Copy, Clone, Eq, PartialEq, Debug, Display)]
+    #[display("predicate")]
+    struct Test;
+    impl Predicate for Test {
+        type Attr = TestAttr;
+    }
+
+    #[derive(Copy, Clone, Eq, PartialEq, Debug, Display)]
+    enum TestAttr {
+        #[display("attr1")]
+        TestAttr1,
+        #[display("attr2")]
+        TestAttr2,
+    }
+    impl Attribute for TestAttr {
+        type Expression = String;
+
+        fn name(&self) -> Option<Ident> {
+            Some(Ident::from_str(&self.to_string()).unwrap())
+        }
+
+        fn value(&self) -> AttrVal<Self::Expression> {
+            AttrVal::Expr("value".to_string())
+        }
+    }
+
+    impl Expression for String {}
+
+    #[test]
+    fn display() {
+        let expr = TExpr {
+            subject: strict_encoding::ident!("test"),
+            predicate: Test,
+            attributes: small_vec![ TestAttr::TestAttr1, TestAttr::TestAttr2 ],
+            content: Default::default(),
+            comment: None,
+        };
+        assert_eq!(expr.display().to_string(), "predicate test: attr1 value, attr2 value \n");
+    }
+}
